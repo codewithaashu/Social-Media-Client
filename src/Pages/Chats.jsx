@@ -22,7 +22,7 @@ const Chats = () => {
     //scroll page to top
     window.scrollTo(0, 0);
     //create a socket on io circuit
-    socket.current = io("ws://localhost:8800"); //initialise the socket variable
+    socket.current = io("https://social-media-socket-pojb.onrender.com"); //initialise the socket variable
     //add user to active user list by trigged an event "add-me-active-users-list"
     socket.current.emit("add-me-active-users-list", _id);
     //get active users and add in onlineUsers list.
