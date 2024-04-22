@@ -3,8 +3,12 @@ import { errorToast, successToast } from "./Toast";
 
 //create an instance of Axios
 const AxiosInstance = axios.create({
-  withCredentials: true,
   baseURL: process.env.REACT_APP_SERVER_URL,
+  withCredentials: true,
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
+  },
 });
 
 const RegisterUser = async (user) => {
@@ -538,6 +542,42 @@ const getAllChats = async (id) => {
   }
 };
 
+const blockUser = async (formData) => {
+  try {
+    const { data } = await AxiosInstance.put("/chat/block", formData);
+    const { success, message, chat } = data;
+    if (success) {
+      successToast(message);
+    }
+    return chat;
+  } catch (err) {
+    if (err.response) {
+      errorToast(err.response?.data.message);
+    } else {
+      errorToast(err.message ?? "Server Error!");
+    }
+    return null;
+  }
+};
+
+const deleteChats = async (memberId) => {
+  try {
+    const { data } = await AxiosInstance.put("/chat/delete/" + memberId);
+    const { success, message, chats } = data;
+    if (success) {
+      successToast(message);
+    }
+    return chats;
+  } catch (err) {
+    if (err.response) {
+      errorToast(err.response?.data.message);
+    } else {
+      errorToast(err.message ?? "Server Error!");
+    }
+    return null;
+  }
+};
+
 export {
   RegisterUser,
   loggedInUser,
@@ -568,6 +608,8 @@ export {
   sendMessage,
   getAllMessages,
   getAllChats,
+  blockUser,
+  deleteChats,
 };
 
 //{withCredentials:true} it ensures that user is authorised

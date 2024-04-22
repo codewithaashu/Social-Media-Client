@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import ChatsRightHeader from "./ChatsRightHeader";
 import ChatBox from "./ChatBox";
 import { useSelector } from "react-redux";
@@ -10,6 +10,7 @@ const ChatsRightContainer = ({
   setScreen,
 }) => {
   const { chat } = useSelector((state) => state.chat);
+  const [showOptionScreen, setShowOptionScreen] = useState(false);
   return (
     <>
       <div
@@ -19,10 +20,11 @@ const ChatsRightContainer = ({
       >
         {chat ? (
           <>
-            <ChatsRightHeader setScreen={setScreen} />
+            <ChatsRightHeader setScreen={setScreen} showOptionScreen={showOptionScreen} setShowOptionScreen={setShowOptionScreen} />
             <ChatBox
               setSentMessage={setSentMessage}
               recievedMessage={recievedMessage}
+              showOptionScreen={showOptionScreen} setShowOptionScreen={setShowOptionScreen}
             />
           </>
         ) : (

@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ChatListCard from "./ChatListCard";
 import { useDispatch } from "react-redux";
-import { setChat } from "../../Redux/ChatSlice";
+import { setChat, setChats } from "../../Redux/ChatSlice";
 import { getAllChats } from "../../utils/APIRequest";
 
 const ChatMembersList = ({ friends, setScreen, sentMessage }) => {
   const dispatch = useDispatch();
-  const [chats, setChats] = useState(null);
   const handleApi = async () => {
     const res = await getAllChats();
-    setChats(res);
+    dispatch(setChats(res));
   };
   useEffect(() => {
     handleApi();
@@ -30,7 +29,7 @@ const ChatMembersList = ({ friends, setScreen, sentMessage }) => {
                 setScreen("Right");
               }}
             >
-              <ChatListCard friend={curr} chats={chats} />
+              <ChatListCard friend={curr} />
             </div>
           );
         })}

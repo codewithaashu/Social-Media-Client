@@ -1,8 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-const ChatListCard = ({ friend, chats }) => {
+const ChatListCard = ({ friend }) => {
   const { chat } = useSelector((state) => state.chat);
+  const { chats } = useSelector((state) => state.chat);
   //get online user
   const { onlineUser } = useSelector((state) => state.chat);
   return (

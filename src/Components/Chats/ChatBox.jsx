@@ -8,7 +8,12 @@ import { errorToast } from "../../utils/Toast";
 import { getAllMessages, sendMessage } from "../../utils/APIRequest";
 import { useSelector } from "react-redux";
 import MediaModalContainer from "./MediaModalContainer";
-const ChatBox = ({ setSentMessage, recievedMessage }) => {
+const ChatBox = ({
+  setSentMessage,
+  recievedMessage,
+  setShowOptionScreen,
+  showOptionScreen,
+}) => {
   const messagesEndRef = useRef();
   const [openModal, setOpenModal] = useState(false);
   const [message, setMessage] = useState("");
@@ -16,14 +21,21 @@ const ChatBox = ({ setSentMessage, recievedMessage }) => {
   const [loading, setLoding] = useState(false);
   const [uploadFile, setUplodadFile] = useState("");
   const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8]; //array used for skeleton
-
+  const [chatBlockStatus, setChatBlockStatus] = useState(false);
   //get selected chat user details
-  const { chat } = useSelector((state) => state.chat);
+  const { chat, chats } = useSelector((state) => state.chat);
   //get login user id details
   const { loginUser } = useSelector((state) => state?.user);
 
   //send message
   const handleOnEnter = async (message) => {
+    //if user is block
+    if (chatBlockStatus) {
+      errorToast(
+        `Unblock ${chat?.firstName + " " + chat?.lastName} to send a message`
+      );
+      return;
+    }
     //if message is empty
     if (!message) {
       errorToast("Please write something...");
@@ -50,8 +62,12 @@ const ChatBox = ({ setSentMessage, recievedMessage }) => {
   };
 
   useEffect(() => {
+    const isBlock = chats.find((curr) =>
+      curr?.members?.includes(chat?._id)
+    )?.isBlock;
+    setChatBlockStatus(isBlock);
     handleApi();
-  }, [chat]);
+  }, [chat, chats]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -134,7 +150,14 @@ const ChatBox = ({ setSentMessage, recievedMessage }) => {
             })}
           </div>
         )}
-
+        {chatBlockStatus && (
+          <p
+            className="text-xs font-semibold px-4 py-1 cursor-pointer rounded-xl text-center bg-zinc-800 w-fit self-center my-2 text-gray-300"
+            onClick={() => setShowOptionScreen(!showOptionScreen)}
+          >
+            You block this user. Tap to unblock.
+          </p>
+        )}
         {/* Input Box */}
         <div className="flex flex-row items-center gap-3 w-full p-3">
           <div className="flex flex-row gap-3 text-xl">
