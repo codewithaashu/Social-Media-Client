@@ -9,19 +9,21 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setRefresh } from "../Redux/RefreshSlice";
+import { setRequestList } from "../Redux/UserSlice";
 const FriendsSuggestionBox = () => {
   const [suggestFriends, setSuggestFriends] = useState(null);
   const [requests, setRequests] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { refresh } = useSelector((state) => state.refresh);
+  const { requestList } = useSelector((state) => state.user);
 
   useEffect(
     () => async () => {
       const suggestPeople = await getFriendSuggestList();
       setSuggestFriends(suggestPeople);
       const result = await getRequestList();
-      setRequests(result);
+      dispatch(setRequestList(result));
     },
     [refresh]
   );
@@ -83,7 +85,9 @@ const FriendsSuggestionBox = () => {
                               (curr) => curr.requestTo === _id
                             )}
                           >
-                            {requests.some((curr) => curr.requestTo === _id) ? (
+                            {requestList.some(
+                              (curr) => curr.requestTo === _id
+                            ) ? (
                               <FaUserCheck />
                             ) : (
                               <FaUserPlus />

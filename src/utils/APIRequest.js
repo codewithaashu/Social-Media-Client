@@ -347,6 +347,24 @@ const getFriendRequestList = async () => {
   }
 };
 
+const cancelRequest = async (id) => {
+  try {
+    const { data } = await AxiosInstance.put("/friend/cancel-request/" + id);
+    const { requests, message, success } = data;
+    if (success) {
+      successToast(message);
+    }
+    return requests;
+  } catch (err) {
+    if (err.response) {
+      errorToast(err.response?.data?.message);
+    } else {
+      errorToast(err.message ?? "Network error!");
+    }
+    return null;
+  }
+};
+
 const acceptRequest = async (requestId, requestStatus) => {
   try {
     const { data } = await AxiosInstance.put(
@@ -578,6 +596,24 @@ const deleteChats = async (memberId) => {
   }
 };
 
+const unfriendUser = async (id) => {
+  try {
+    const { data } = await AxiosInstance.put("/friend/unfriend/" + id);
+    const { success, message, user } = data;
+    if (success) {
+      successToast(message);
+    }
+    return user;
+  } catch (err) {
+    if (err.response) {
+      errorToast(err.response?.data.message);
+    } else {
+      errorToast(err.message ?? "Server Error!");
+    }
+    return null;
+  }
+};
+
 export {
   RegisterUser,
   loggedInUser,
@@ -610,6 +646,8 @@ export {
   getAllChats,
   blockUser,
   deleteChats,
+  unfriendUser,
+  cancelRequest,
 };
 
 //{withCredentials:true} it ensures that user is authorised

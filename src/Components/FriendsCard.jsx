@@ -1,10 +1,43 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { FaUserMinus } from "react-icons/fa";
+import { unfriendUser } from "../utils/APIRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../Redux/UserSlice";
+import { setRefresh } from "../Redux/RefreshSlice";
+import { confirmAlert } from "react-confirm-alert";
+import ConfirmAlertModal from "./ConfirmAlertModal";
+import { setChat } from "../Redux/ChatSlice";
 
 const FriendsCard = ({
   friend: { profileUrl, profession, location, _id, firstName, lastName },
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { refresh } = useSelector((state) => state.refresh);
+  const { chat } = useSelector((state) => state.chat);
+  const { loginUser, profileUser } = useSelector((state) => state.user);
+  const handleConfirm = async (onClose) => {
+    const res = await unfriendUser(_id);
+    if (res) {
+      dispatch(setRefresh(!refresh));
+      dispatch(setChat(null));
+      dispatch(login(res));
+      onClose();
+    }
+  };
+  const handleUnfriend = () => {
+    confirmAlert({
+      customUI: ({ onClose }) => (
+        <ConfirmAlertModal
+          heading={"Are you sure?"}
+          title={`You want to unfriend ${firstName + " " + lastName}?`}
+          handleConfirm={() => handleConfirm(onClose)}
+          onClose={onClose}
+        />
+      ),
+    });
+  };
   return (
     <>
       <div className="flex flex-row gap-5 items-center w-full">
@@ -32,9 +65,12 @@ const FriendsCard = ({
             {profession === "" ? "No Profession" : profession}
           </p>
         </div>
-        <div className="w-10 min-h-10 object-cover rounded-full hover:bg-zinc-800 cursor-pointer text-center mx-auto">
-          <h1 className="text-lg font-extrabold text-gray-400 ">...</h1>
-        </div>
+        {loginUser._id === profileUser?.user?._id && (
+          <FaUserMinus
+            className="text-lg font-extrabold text-gray-400 mx-auto cursor-pointer"
+            onClick={handleUnfriend}
+          />
+        )}
       </div>
     </>
   );

@@ -14,11 +14,13 @@ import { Toaster } from "react-hot-toast";
 import { PersistGate } from "redux-persist/integration/react";
 import PostDetails from "./Pages/PostDetails";
 import Chats from "./Pages/Chats";
+import Cookies from "js-cookie";
 const root = ReactDOM.createRoot(document.getElementById("root"));
+const access_token = Cookies.get("access_token");
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: access_token ? <App /> : <Login />,
   },
   {
     path: "/login",
@@ -38,15 +40,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile/:id",
-    element: <Profile />,
+    element: access_token ? <Profile /> : <Login />,
   },
   {
     path: "/post/:postId",
-    element: <PostDetails />,
+    element: access_token ? <PostDetails /> : <Login />,
   },
   {
     path: "/chats",
-    element: <Chats />,
+    element: access_token ? <Chats /> : <Login />,
   },
 ]);
 root.render(

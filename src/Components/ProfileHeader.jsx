@@ -1,18 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoCamera } from "react-icons/io5";
-import { FaUserEdit } from "react-icons/fa";
+import { FaUserEdit, FaUserMinus, FaUserPlus } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { UpdateUser, uploadMedia } from "../utils/APIRequest";
+import {
+  UpdateUser,
+  acceptRequest,
+  cancelRequest,
+  getFriendRequestList,
+  getRequestList,
+  sendFriendRequest,
+  unfriendUser,
+  uploadMedia,
+} from "../utils/APIRequest";
 import EditModalContainer from "./EditModalContainer";
 import { setRefresh } from "../Redux/RefreshSlice";
-import { updateProfile } from "../Redux/UserSlice";
+import {
+  login,
+  setFriendRequests,
+  setRequestList,
+  updateProfile,
+} from "../Redux/UserSlice";
+import { confirmAlert } from "react-confirm-alert";
+import ConfirmAlertModal from "./ConfirmAlertModal";
+import { FaUserXmark } from "react-icons/fa6";
+import { setChat } from "../Redux/ChatSlice";
 const ProfileHeader = ({ active, setActive }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const loginUser = useSelector((state) => state?.user?.loginUser);
+  const { friendRequests, requestList } = useSelector((state) => state.user);
   const profileUser = useSelector((state) => state?.user?.profileUser);
   const { refresh } = useSelector((state) => state.refresh);
   const { profileUrl, firstName, lastName, friends, _id, coverPhoto } =
@@ -46,6 +65,70 @@ const ProfileHeader = ({ active, setActive }) => {
 
   const handleOpenModal = () => {
     setOpenModal(true);
+  };
+
+  const handleConfirm = async (onClose, type) => {
+    if (type === "unfriend") {
+      const res = await unfriendUser(_id);
+      if (res) {
+        dispatch(setRefresh(!refresh));
+        dispatch(setChat(null));
+        dispatch(login(res));
+        onClose();
+      }
+    } else {
+      const res = await cancelRequest(_id);
+      if (res) {
+        dispatch(setRequestList(res));
+        onClose();
+      }
+    }
+  };
+
+  const handleUnfriend = () => {
+    confirmAlert({
+      customUI: ({ onClose }) => (
+        <ConfirmAlertModal
+          heading={"Are you sure?"}
+          title={`You want to unfriend ${firstName + " " + lastName}?`}
+          handleConfirm={() => handleConfirm(onClose, "unfriend")}
+          onClose={onClose}
+        />
+      ),
+    });
+  };
+
+  const handleRequestSend = async (id) => {
+    const success = await sendFriendRequest({
+      requestTo: profileUser?.user?._id,
+    });
+    if (success) {
+      const result = await getRequestList();
+      dispatch(setRequestList(result));
+      dispatch(setRefresh(!refresh));
+    }
+  };
+
+  const handleFriendRequest = async (requestStatus, requestId) => {
+    const success = await acceptRequest(requestId, requestStatus);
+    if (success) {
+      const resp = await getFriendRequestList();
+      dispatch(setFriendRequests(resp));
+      dispatch(setRefresh(!refresh));
+    }
+  };
+
+  const handleCancelRequest = () => {
+    confirmAlert({
+      customUI: ({ onClose }) => (
+        <ConfirmAlertModal
+          heading={"Are you sure?"}
+          title={`Cancel friend request of ${firstName + " " + lastName}?`}
+          handleConfirm={() => handleConfirm(onClose, "cancelRequest")}
+          onClose={onClose}
+        />
+      ),
+    });
   };
 
   return (
@@ -144,22 +227,102 @@ const ProfileHeader = ({ active, setActive }) => {
               </div>
             </div>
           </div>
-          {loginUser?._id === _id && (
-            <div className="flex flex-row gap-5 self-end ">
+          <div className="flex flex-row gap-5 self-end ">
+            {loginUser?._id === _id && (
+              <>
+                <button
+                  className="text-sm md:text-[15px] font-semibold p-[6px] px-3 rounded-md bg-zinc-100  text-black flex gap-1 items-center hover:bg-zinc-200"
+                  onClick={handleOpenModal}
+                >
+                  <span>
+                    <FaUserEdit />
+                  </span>
+                  Edit Profile
+                </button>
+                <button className="text-[15px] font-semibold p-[6px] px-3 rounded-md bg-zinc-100  text-black flex gap-1 items-center hover:bg-zinc-200">
+                  <IoMdSettings />
+                </button>
+              </>
+            )}
+            {friendRequests?.some(
+              (curr) =>
+                curr.requestTo === loginUser._id &&
+                curr?.requestFrom?._id === profileUser?.user?._id
+            ) && (
+              <>
+                <button
+                  className="text-[15px] font-semibold p-[6px] px-3 rounded-md bg-blue text-white   flex gap-1 items-center "
+                  onClick={() =>
+                    handleFriendRequest(
+                      "Accept",
+                      friendRequests?.find(
+                        (curr) => curr.requestTo === loginUser._id
+                      )?._id
+                    )
+                  }
+                >
+                  Accept
+                </button>
+                <button
+                  className="text-[15px] font-semibold p-[6px] px-3 rounded-md bg-black border-[1px] border-gray-700  text-white flex gap-1 items-center "
+                  onClick={() =>
+                    handleFriendRequest(
+                      "Deny",
+                      friendRequests?.find(
+                        (curr) => curr.requestTo === loginUser._id
+                      )?._id
+                    )
+                  }
+                >
+                  Deny
+                </button>
+              </>
+            )}
+            {loginUser?.friends?.some((curr) => curr?._id === _id) && (
               <button
                 className="text-sm md:text-[15px] font-semibold p-[6px] px-3 rounded-md bg-zinc-100  text-black flex gap-1 items-center hover:bg-zinc-200"
-                onClick={handleOpenModal}
+                onClick={handleUnfriend}
               >
                 <span>
-                  <FaUserEdit />
+                  <FaUserMinus />
                 </span>
-                Edit Profile
+                Unfriend
               </button>
-              <button className="text-[15px] font-semibold p-[6px] px-3 rounded-md bg-zinc-100  text-black flex gap-1 items-center hover:bg-zinc-200">
-                <IoMdSettings />
+            )}
+            {loginUser?.friends?.every((curr) => curr?._id !== _id) &&
+              loginUser._id !== _id &&
+              !friendRequests?.some(
+                (curr) =>
+                  curr.requestTo === loginUser._id &&
+                  curr?.requestFrom?._id === profileUser?.user?._id
+              ) &&
+              !requestList?.some(
+                (curr) => curr?.requestTo === profileUser?.user?._id
+              ) && (
+                <button
+                  className="text-sm md:text-[15px] font-semibold p-[6px] px-3 rounded-md bg-zinc-100  text-black flex gap-1 items-center hover:bg-zinc-200"
+                  onClick={handleRequestSend}
+                >
+                  <span>
+                    <FaUserPlus />
+                  </span>
+                  Add Friend
+                </button>
+              )}
+            {requestList?.some(
+              (curr) => curr?.requestTo === profileUser?.user?._id
+            ) && (
+              <button
+                className="text-sm md:text-[15px] font-semibold p-[6px] px-3 rounded-md bg-zinc-100  text-black flex gap-1 items-center hover:bg-zinc-200"
+                onClick={handleCancelRequest}
+              >
+                <span>
+                  <FaUserXmark />
+                </span>
+                Cancel Request
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Navigation Box */}

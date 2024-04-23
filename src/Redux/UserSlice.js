@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-const initialState = { loginUser: null, profileUser: null };
+const initialState = {
+  loginUser: null,
+  profileUser: null,
+  friendRequests: null,
+  requestList: null,
+};
 
 //create a slice i.e. a state which will be changed. state has their own name, initial state and function which change their state
 const UserSlice = createSlice({
@@ -23,8 +28,21 @@ const UserSlice = createSlice({
     visitProfile(state, action) {
       state.profileUser = action.payload;
     },
+    setFriendRequests(state, action) {
+      state.friendRequests = action.payload;
+    },
+    setRequestList(state, action) {
+      state.requestList = action.payload;
+    },
   },
 });
 //export actions and reducers
-export const { login, logout, updateProfile, visitProfile } = UserSlice.actions;
+export const {
+  login,
+  logout,
+  updateProfile,
+  visitProfile,
+  setFriendRequests,
+  setRequestList,
+} = UserSlice.actions;
 export default UserSlice.reducer;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Logo from "./Logo";
 import InputComponent from "./InputComponent";
 import BtnComponent from "./BtnComponent";

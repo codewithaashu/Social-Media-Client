@@ -4,18 +4,19 @@ import { acceptRequest, getFriendRequestList } from "../utils/APIRequest";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setRefresh } from "../Redux/RefreshSlice";
+import { setFriendRequests } from "../Redux/UserSlice";
 const FriendsRequestBox = () =>
   // { refresh, setRefresh }
 
   {
-    const [friendRequests, setFriendRequests] = useState([]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { refresh } = useSelector((state) => state.refresh);
+    const { friendRequests } = useSelector((state) => state.user);
     useEffect(
       () => async () => {
         const resp = await getFriendRequestList();
-        setFriendRequests(resp);
+        dispatch(setFriendRequests(resp));
       },
       [refresh]
     );
@@ -33,10 +34,10 @@ const FriendsRequestBox = () =>
         <div className="bg-zinc-950 rounded-lg shadow-xl p-4 py-3">
           <div className="flex flex-row justify-between font-semibold pb-1 border-b-[1px] border-zinc-900">
             <h1 className="text-[15px] text-gray-300">Friend Request</h1>
-            <p className="text-sm">{friendRequests.length}</p>
+            <p className="text-sm">{friendRequests?.length}</p>
           </div>
           <div className="flex flex-col gap-5 py-3 min-h-10">
-            {friendRequests.length === 0 ? (
+            {friendRequests?.length === 0 ? (
               <h1 className="text-sm font-semibold text-gray-200 text-center">
                 No Friend Request
               </h1>
@@ -70,7 +71,7 @@ const FriendsRequestBox = () =>
                       </div>
                       <div className="flex flex-row gap-2">
                         <button
-                          className="text-xs font-semibold bg-blue  rounded-lg p-[5px]"
+                          className="text-xs font-semibold bg-blue rounded-lg p-[5px]"
                           onClick={() =>
                             handleFriendRequest("Accept", curr._id)
                           }

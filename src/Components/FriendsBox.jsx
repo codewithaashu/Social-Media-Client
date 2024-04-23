@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NoProfilePic from "../assests/userprofile.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 const FriendsBox = () => {
   const navigate = useNavigate();
-  const { loginUser } = useSelector((state) => state?.user);
-  const { _id, friends } = loginUser;
+  const loginUser = useSelector((state) => state?.user?.loginUser);
+  const [friends, setFriends] = useState(loginUser.friends);
+  const { _id } = loginUser;
+  useEffect(() => {
+    setFriends(loginUser.friends);
+  }, [loginUser]);
+
   return (
     <>
       <div className="bg-zinc-950 rounded-lg shadow-xl p-4 py-3">

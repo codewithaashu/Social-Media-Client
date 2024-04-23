@@ -5,17 +5,22 @@ import ChatsRightContainer from "../Components/Chats/ChatsRightContainer";
 //to use socket service in frontend , download socket.io-client library
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
-import { setOnlineUser } from "../Redux/ChatSlice";
+import { setChat, setOnlineUser } from "../Redux/ChatSlice";
 
 const Chats = () => {
   const dispatch = useDispatch();
   //create a variable of socket so that we can use in different block
   const socket = useRef();
   const { _id } = useSelector((state) => state?.user?.loginUser);
-  const { chat } = useSelector((state) => state.chat);
+  const { chat } = useSelector((state) => state?.chat);
   const [sentMessage, setSentMessage] = useState(null);
   const [recievedMessage, setRecievedMessage] = useState(null);
   const [screen, setScreen] = useState("Left");
+  useEffect(() => {
+    return () => {
+      dispatch(setChat(null));
+    };
+  }, []);
   useEffect(() => {
     //change the title
     document.title = "Chats | FunBook";
