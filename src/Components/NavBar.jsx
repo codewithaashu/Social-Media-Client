@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
-import { CiDark } from "react-icons/ci";
+import { CiDark, CiLight } from "react-icons/ci";
 import { IoLogOutOutline } from "react-icons/io5";
 import { logoutUser, searchUser } from "../utils/APIRequest";
 import { Link, useNavigate } from "react-router-dom";
 import { BsChatSquareDots } from "react-icons/bs";
 import { SearchResultContainer } from "./SearchResultContainer";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleTheme } from "../Redux/ThemeSlice";
 
 const NavBar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState(null);
   const { loginUser } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
+  const [currentTheme, setCurrentTheme] = useState(theme);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setCurrentTheme(theme);
+  }, [theme]);
 
   const handleChange = (value) => {
     if (!value) {
@@ -65,8 +73,17 @@ const NavBar = () => {
           />
         </div>
         <div className="flex flex-row justify-center items-center gap-4">
-          <div className="border-[1px] px-3 py-1 border-gray-800 rounded-lg bg-black cursor-pointer shadow-lg">
-            <CiDark size={"22px"} />
+          <div
+            className="border-[1px] px-3 py-1 border-gray-800 rounded-lg bg-black cursor-pointer shadow-lg"
+            onClick={() =>
+              dispatch(toggleTheme(currentTheme === "dark" ? "light" : "dark"))
+            }
+          >
+            {currentTheme === "dark" ? (
+              <CiDark size={"22px"} />
+            ) : (
+              <CiLight size={"22px"} />
+            )}
           </div>
           <div
             className="border-[1px] px-3 py-2 border-gray-800 rounded-lg bg-black cursor-pointer"
@@ -87,8 +104,17 @@ const NavBar = () => {
         <div className="flex justify-between">
           <Logo />
           <div className="flex flex-row justify-center items-center gap-4">
-            <div className="border-[1px] px-3 py-1 border-gray-800 rounded-lg bg-black cursor-pointer shadow-lg">
-              <CiDark size={"22px"} />
+            <div
+              className="border-[1px] px-3 py-1 border-gray-800 rounded-lg bg-black cursor-pointer shadow-lg"
+              onClick={() =>
+                dispatch(toggleTheme(theme === "dark" ? "light" : "dark"))
+              }
+            >
+              {currentTheme === "dark" ? (
+                <CiDark size={"22px"} />
+              ) : (
+                <CiLight size={"22px"} />
+              )}
             </div>
             <div
               className="border-[1px] px-3 py-1 border-gray-800 rounded-lg bg-black cursor-pointer"

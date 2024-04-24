@@ -7,8 +7,8 @@ const ThemeSlice = createSlice({
   name: "theme",
   initialState,
   reducers: {
-    toggleTheme(state) {
-      state.theme = localStorage.getItem("theme") === "dark" ? "light" : "dark";
+    toggleTheme(state, action) {
+      state.theme = action.payload;
     },
   },
 });

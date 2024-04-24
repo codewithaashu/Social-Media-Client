@@ -21,7 +21,7 @@ const ChatListCard = ({ friend }) => {
           />
           <p
             className={`w-[10px] h-[10px] ${
-              onlineUser.some((curr) => curr.userId === friend._id)
+              onlineUser?.some((curr) => curr.userId === friend._id)
                 ? "bg-green-600"
                 : "bg-gray-500"
             } rounded-full absolute bottom-0 right-0`}
