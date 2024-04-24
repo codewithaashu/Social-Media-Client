@@ -614,6 +614,21 @@ const unfriendUser = async (id) => {
   }
 };
 
+const searchUser = async (keyword) => {
+  try {
+    const { data } = await AxiosInstance.get("/auth/search-user/" + keyword);
+    const { users } = data;
+    return users;
+  } catch (err) {
+    if (err.response) {
+      errorToast(err.response?.data.message);
+    } else {
+      errorToast(err.message ?? "Server Error!");
+    }
+    return null;
+  }
+};
+
 export {
   RegisterUser,
   loggedInUser,
@@ -648,6 +663,7 @@ export {
   deleteChats,
   unfriendUser,
   cancelRequest,
+  searchUser,
 };
 
 //{withCredentials:true} it ensures that user is authorised

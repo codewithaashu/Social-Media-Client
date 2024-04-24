@@ -73,7 +73,7 @@ const FriendsSuggestionBox = () => {
                           <div className="flex flex-col font-semibold text-sm">
                             <h1>{firstName + " " + lastName}</h1>
                             <p className="text-ascent-2 text-xs">
-                              {profession ?? "No Profession"}
+                              {profession ? profession : "No Profession"}
                             </p>
                           </div>
                         </div>
@@ -85,7 +85,7 @@ const FriendsSuggestionBox = () => {
                               (curr) => curr.requestTo === _id
                             )}
                           >
-                            {requestList.some(
+                            {requestList?.some(
                               (curr) => curr.requestTo === _id
                             ) ? (
                               <FaUserCheck />
