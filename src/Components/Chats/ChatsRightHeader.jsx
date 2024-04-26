@@ -9,7 +9,11 @@ import { confirmAlert } from "react-confirm-alert";
 import ConfirmAlertModal from "../ConfirmAlertModal";
 import { blockUser, deleteChats } from "../../utils/APIRequest";
 import { setChats } from "../../Redux/ChatSlice";
-const ChatsRightHeader = ({ setScreen,showOptionScreen,setShowOptionScreen }) => {
+const ChatsRightHeader = ({
+  setScreen,
+  showOptionScreen,
+  setShowOptionScreen,
+}) => {
   const navigate = useNavigate("");
   const dispatch = useDispatch();
   //get onlineUsers list
@@ -38,8 +42,8 @@ const ChatsRightHeader = ({ setScreen,showOptionScreen,setShowOptionScreen }) =>
         status: chat?.isBlock ? false : true,
       });
       //after block or unblock, update the chats
-      const updatedChats = chats.map((curr) => {
-        if (chats.find((curr) => curr?.members?.includes(_id))) {
+      const updatedChats = chats?.map((curr) => {
+        if (chats?.find((curr) => curr?.members?.includes(_id))) {
           curr = res;
         }
         return curr;

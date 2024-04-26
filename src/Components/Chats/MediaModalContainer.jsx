@@ -68,13 +68,13 @@ const MediaModalContainer = ({
   return (
     <>
       <div
-        className={`bg-[#000000c1]  absolute top-0 left-0 w-full min-h-screen
+        className={`bg-[#000000c1]  absolute top-0 left-0 w-full min-h-[85vh]
        ${
          !openModal ? "hidden" : "flex"
        }  justify-center  px-3 md:px-0  z-10 items-center`}
       >
         <div
-          className=" bg-black px-[10px] md:px-5 py-5 rounded-md h-fit w-full md:w-1/4 flex flex-col gap-5 "
+          className=" bg-black px-[10px] md:px-5 py-5 rounded-md h-fit w-full md:w-1/3 flex flex-col gap-5 "
           style={{ scrollbarWidth: "none" }}
         >
           <div className="flex justify-between border-b-[1px] border-zinc-900 pb-2">

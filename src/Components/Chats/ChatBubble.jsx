@@ -10,7 +10,11 @@ const ChatBubble = ({ imgSrc, message, reciever, createdAt, mediaSrc }) => {
         </div>
       </div>
       {mediaSrc && (
-        <img src={mediaSrc} alt="Message" className="w-60 h-60 rounded-lg" />
+        <img
+          src={mediaSrc}
+          alt="Message"
+          className=" w-36 h-36 md:w-60 md:h-60 rounded-lg"
+        />
       )}
       {message && (
         <div
