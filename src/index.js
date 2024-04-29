@@ -16,7 +16,8 @@ import PostDetails from "./Pages/PostDetails";
 import Chats from "./Pages/Chats";
 import Cookies from "js-cookie";
 const root = ReactDOM.createRoot(document.getElementById("root"));
-const access_token = Cookies.get("access_token");
+// const access_token = Cookies.get("access_token");
+const access_token = localStorage.getItem("access_token");
 const router = createBrowserRouter([
   {
     path: "/",
