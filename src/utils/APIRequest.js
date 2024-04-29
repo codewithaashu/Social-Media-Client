@@ -8,6 +8,8 @@ const AxiosInstance = axios.create({
   headers: {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
+    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
   },
 });
 
@@ -53,8 +55,9 @@ const UpdateUser = async (formData) => {
 const loggedInUser = async (formData) => {
   try {
     const { data } = await AxiosInstance.post("/auth/login", formData);
-    const { success, message } = data;
+    const { success, message, token } = data;
     if (success) {
+      localStorage.setItem("access_token", token);
       successToast(message);
     } else {
       errorToast(message);
@@ -75,6 +78,7 @@ const logoutUser = async (formData) => {
     const { data } = await AxiosInstance.get("/auth/logout");
     const { success, message } = data;
     if (success) {
+      localStorage.removeItem("access_token");
       successToast(message);
     } else {
       errorToast(message);
