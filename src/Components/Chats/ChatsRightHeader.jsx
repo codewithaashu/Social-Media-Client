@@ -108,7 +108,7 @@ const ChatsRightHeader = ({
               />
               <p
                 className={`w-[10px] h-[10px] ${
-                  onlineUser.some((curr) => curr.userId === _id)
+                  onlineUser?.some((curr) => curr.userId === _id)
                     ? "bg-green-600"
                     : "bg-gray-500"
                 } rounded-full absolute bottom-0 right-0`}
@@ -122,7 +122,7 @@ const ChatsRightHeader = ({
                 {firstName + " " + lastName}
               </h1>
               <p className="text-xs text-ascent-2 font-semibold">
-                {onlineUser.some((curr) => curr.userId === _id)
+                {onlineUser?.some((curr) => curr.userId === _id)
                   ? "Online"
                   : "Offline"}
               </p>
