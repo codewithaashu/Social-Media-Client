@@ -19,8 +19,11 @@ const EditModalContainer = ({ openModal, setOpenModal }) => {
     firstName,
     lastName,
     instagramURL,
-    twitterURL,
     facebookURL,
+    linkedinURL,
+    githubURL,
+    leetcodeURL,
+    gfgURL,
     profession,
     location,
     _id,
@@ -32,8 +35,11 @@ const EditModalContainer = ({ openModal, setOpenModal }) => {
     profession,
     location,
     instagramURL,
-    twitterURL,
     facebookURL,
+    linkedinURL,
+    githubURL,
+    leetcodeURL,
+    gfgURL,
     profileUrl,
     about,
   });
@@ -44,8 +50,11 @@ const EditModalContainer = ({ openModal, setOpenModal }) => {
     profession: true,
     location: true,
     instagramURL: true,
-    twitterURL: true,
     facebookURL: true,
+    linkedinURL: true,
+    githubURL: true,
+    leetcodeURL: true,
+    gfgURL: true,
     profileUrl: true,
     about: true,
   });
@@ -179,10 +188,10 @@ const EditModalContainer = ({ openModal, setOpenModal }) => {
                 setErrorFormData={setErrorFormData}
               />
               <InputComponent
-                label={"Twitter Profile"}
+                label={"Facebook Profile"}
                 inputType={"url"}
-                placeholder={"Paste your Twitter Profile URL here..."}
-                field={"twitterURL"}
+                placeholder={"Paste your Facebook Profile URL here..."}
+                field={"facebookURL"}
                 formData={formData}
                 setFormData={setFormData}
                 isValidate={true}
@@ -190,10 +199,43 @@ const EditModalContainer = ({ openModal, setOpenModal }) => {
                 setErrorFormData={setErrorFormData}
               />
               <InputComponent
-                label={"Facebook Profile"}
+                label={"LinkedIn Profile"}
                 inputType={"url"}
-                placeholder={"Paste your Facebook Profile URL here..."}
-                field={"facebookURL"}
+                placeholder={"Paste your LinkedIn Profile URL here..."}
+                field={"linkedinURL"}
+                formData={formData}
+                setFormData={setFormData}
+                isValidate={true}
+                errorFormData={errorFormData}
+                setErrorFormData={setErrorFormData}
+              />
+              <InputComponent
+                label={"Github Profile"}
+                inputType={"url"}
+                placeholder={"Paste your Github Profile URL here..."}
+                field={"githubURL"}
+                formData={formData}
+                setFormData={setFormData}
+                isValidate={true}
+                errorFormData={errorFormData}
+                setErrorFormData={setErrorFormData}
+              />
+              <InputComponent
+                label={"Leetcode Profile"}
+                inputType={"url"}
+                placeholder={"Paste your Leetcode Profile URL here..."}
+                field={"leetcodeURL"}
+                formData={formData}
+                setFormData={setFormData}
+                isValidate={true}
+                errorFormData={errorFormData}
+                setErrorFormData={setErrorFormData}
+              />
+              <InputComponent
+                label={"GeeksForGeeks Profile"}
+                inputType={"url"}
+                placeholder={"Paste your GeeksForGeeks Profile URL here..."}
+                field={"gfgURL"}
                 formData={formData}
                 setFormData={setFormData}
                 isValidate={true}

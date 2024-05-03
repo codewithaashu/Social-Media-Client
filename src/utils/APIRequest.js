@@ -633,6 +633,51 @@ const searchUser = async (keyword) => {
   }
 };
 
+const gfgStats = async (username) => {
+  try {
+    const { data } = await AxiosInstance.get(
+      "/auth/user/gfg-stats/" + username
+    );
+    const { stats, success } = data;
+    if (success) {
+      return stats;
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+};
+
+const leetcodeStats = async (username) => {
+  try {
+    const { data } = await AxiosInstance.get(
+      "/auth/user/leetcode-stats/" + username
+    );
+    const { stats, success } = data;
+    if (success) {
+      return stats;
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+};
+
+const githubStats = async (username) => {
+  try {
+    const { data } = await AxiosInstance.get(
+      "/auth/user/github-stats/" + username
+    );
+    const { stats, success } = data;
+    if (success) {
+      return stats;
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+};
+
 export {
   RegisterUser,
   loggedInUser,
@@ -668,6 +713,9 @@ export {
   unfriendUser,
   cancelRequest,
   searchUser,
+  gfgStats,
+  leetcodeStats,
+  githubStats,
 };
 
 //{withCredentials:true} it ensures that user is authorised
